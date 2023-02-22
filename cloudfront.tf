@@ -56,7 +56,7 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2018"
   }
-  
+
   price_class = "PriceClass_100"
 
   tags = var.common_tags
