@@ -32,6 +32,19 @@ resource "aws_s3_bucket" "root_bucket" {
   tags = var.common_tags
 }
 
+locals {
+  mime_types = {
+    css = "text/css"
+    html = "text/html"
+    js = "application/javascript"
+    json = "application/json"
+    txt = "text/plain"
+    png = "image/png"
+    jpeg = "image/jpeg"
+    jpg = "image/jpg"
+  }
+}
+
 resource "aws_s3_object" "file" {
   for_each = fileset(var.website_root, "**")
 
@@ -40,4 +53,6 @@ resource "aws_s3_object" "file" {
   source = "${var.website_root}/${each.key}"
   etag   = filemd5("${var.website_root}/${each.key}")
   acl    = "public-read"
+  content_type = lookup(local.mime_types, element(split(".", each.value), length(split(".", each.value)) - 1), "text/plain")
+
 }
